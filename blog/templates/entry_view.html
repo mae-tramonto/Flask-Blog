@@ -1,8 +1,11 @@
-<!--{% extends "base.html" %}-->
-<!--{% import "macros.html" as macros %}-->
-<!--{% block content %}-->
-<!--{{ macros.render_entry(entry) }}-->
-<!--{% endblock %}-->
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+{% block content %}
+{{ macros.render_entry(entry) }}
+<a class="btn btn-info" href="{{ url_for('entry_edit_get', id=entry.id) }}" role="button">Edit</a>
+<a class="btn btn-warning" href="{{ url_for('delete_entry_get', id=entry.id) }}" role="button">Delete</a>
+{% endblock %}
 
 
 
+<!--<button type="edit" class="btn btn-link"><a href="{{ url_for('entry_edit_get', id=entry.id) }}">Edit</a></button>-->

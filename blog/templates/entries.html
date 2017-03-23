@@ -1,7 +1,7 @@
 {% import "macros.html" as macros %}
 {% extends "base.html" %}
 {% block content %}
-<a href="{{ url_for('add_entry_get') }}">New Entry</a>
+
 
 {% for entry in entries %}
 {{ macros.render_entry(entry) }}

@@ -5,15 +5,29 @@ from . import app
 from .database import session, Entry
 
     
-PAGINATE_BY = 10
 
 @app.route("/")
+# @app.route("/entries/<int:limit>")
 @app.route("/page/<int:page>")
 def entries(page=1):
-    # Zero-indexed page
-    page_index = page - 1
-
+   
     count = session.query(Entry).count()
+    
+    try:
+        limit = int(request.args.get('limit'))
+        
+    except (ValueError, TypeError):
+        limit = 10
+        
+    if limit:
+        if limit > count:
+            limit = 10 
+        PAGINATE_BY= limit
+    else:
+        PAGINATE_BY= 10
+    # import pdb; pdb.set_trace()
+    
+    page_index = page - 1
 
     start = page_index * PAGINATE_BY
     end = start + PAGINATE_BY
@@ -32,7 +46,8 @@ def entries(page=1):
         has_prev=has_prev,
         page=page,
         total_pages=total_pages
-    )  
+    ) 
+    
     
 @app.route("/entry/add", methods=["GET"])    
 def add_entry_get():
@@ -48,10 +63,44 @@ def add_entry_post():
     session.commit()
     return redirect(url_for("entries"))
     
-# @app.route("/entry/<int:id>")
-# def entry_view(id):
-#     #return "reading entry %d" % id
-#     entry = session.query(Entry)
-#     entry = entry.filter(Entry.id==id)[0]
-#     return render_template("entry_view.html", entry=entry)
+@app.route("/entry/<int:id>")
+def entry_view(id):
+    #return "reading entry %d" % id
+    entry = session.query(Entry)
+    entry = entry.filter(Entry.id==id)[0]
+    return render_template("entry_view.html", entry=entry)
+
+@app.route("/entry/<int:id>/edit", methods=["GET"])
+def entry_edit_get(id):
+    entry = session.query(Entry)
+    entry = entry.filter(Entry.id==id)[0]
+    return render_template("entry_edit.html", entry=entry)
+
+@app.route("/entry/<int:id>/edit", methods=["POST"])   
+def entry_edit_post(id):
+    
+    entry = session.query(Entry)
+    entry = entry.filter(Entry.id==id)[0]
+    entry.title = request.form['title']
+    entry.content = request.form['content']
+    session.add(entry)
+    session.commit()
+    return render_template("entry_view.html", entry=entry)
+    
+@app.route("/entry/<int:id>/delete", methods=["GET"])
+def delete_entry_get(id):
+    entry = session.query(Entry)
+    entry = entry.filter(Entry.id==id)[0]
+    return render_template("delete_entry.html", entry=entry)
+
+ 
+@app.route("/entry/<int:id>/delete_action")
+def delete_entry_post(id):
+
+    entry = session.query(Entry)
+    entry = entry.filter(Entry.id==id)[0]
+    # entry = entry
+    session.delete(entry)
+    session.commit()
+    return redirect(url_for("entries"))
     

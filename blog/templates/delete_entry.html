@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+{% block content %}
+
+{{ macros.render_entry(entry) }}
+
+<div class="alert alert-danger" role="alert">
+    <a href="{{ url_for('delete_entry_post', id=entry.id) }}"  class="alert-link">YES delete this entry</a>
+</div>
+
+<div class="alert alert-success" role="alert">
+    <a href="{{ url_for('delete_entry_get', id=entry.id) }}"  class="alert-link">NO! Don't delete this entry</a>
+</div>
+
+{% endblock %}
