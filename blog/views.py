@@ -5,7 +5,7 @@ from . import app
 from .database import session, Entry
 
 from flask import flash
-from flask.ext.login import login_user
+from flask_login import login_user
 from werkzeug.security import check_password_hash
 from .database import User
 

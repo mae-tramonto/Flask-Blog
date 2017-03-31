@@ -6,7 +6,7 @@ from blog.database import session, Entry
 
 from getpass import getpass
 
-from wekzerug.security import generate_password_hash
+from werkzeug.security import generate_password_hash
 
 from blog.database import User
 
